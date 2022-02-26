@@ -1,6 +1,6 @@
 import React from 'react';
-
-import { Link } from 'react-router-dom';
+import './Navbar.css';
+import { NavLink } from 'react-router-dom';
 
 export const Navbar = () => {
 	return (
@@ -8,13 +8,31 @@ export const Navbar = () => {
 			<nav className='nav'>
 				<ul className='nav__list'>
 					<li className='nav__list-item'>
-						<Link to='/login'>Login</Link>
+						<NavLink
+							to='/auth'
+							className='nav__list-link'
+							activeClassName='is-active'
+						>
+							Login
+						</NavLink>
 					</li>
 					<li className='nav__list-item'>
-						<Link to='/categories'>Categories</Link>
+						<NavLink
+							to='/categories'
+							className='nav__list-link'
+							activeClassName='is-active'
+						>
+							Categories
+						</NavLink>
 					</li>
 					<li className='nav__list-item'>
-						<Link to='/todos'>Todos</Link>
+						<NavLink
+							to='/todos'
+							className='nav__list-link'
+							activeClassName='is-active'
+						>
+							Todos
+						</NavLink>
 					</li>
 				</ul>
 			</nav>

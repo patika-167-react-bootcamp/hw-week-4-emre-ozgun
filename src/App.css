@@ -6,6 +6,7 @@
 
 body {
 	background-color: var(--clr-bg);
+	color: var(--clr-text);
 }
 
 a {

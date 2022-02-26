@@ -8,7 +8,7 @@ type credentialType = {
 	passwordConfirm: string;
 };
 
-export const LoginPage = () => {
+export const AuthPage = () => {
 	const history = useHistory();
 
 	const [credentials, setCredentials] = useState({
