@@ -9,6 +9,7 @@ export const LoginForm = ({ setFormType }: Props) => {
 	return (
 		<form className='form'>
 			<h1 className='form__title'>Login</h1>
+
 			<div className='form__block'>
 				<label htmlFor='email' className='form__block-label'>
 					Email
