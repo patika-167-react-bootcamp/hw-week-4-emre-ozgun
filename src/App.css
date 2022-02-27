@@ -13,3 +13,22 @@ a {
 	text-decoration: none;
 	color: var(--clr-text);
 }
+
+.container {
+	max-width: 992px;
+	margin: 0 auto;
+	display: flex;
+	justify-content: center;
+	padding: 2rem;
+}
+
+.section {
+	width: 336px;
+}
+
+.section__separator {
+	width: 100%;
+	height: 1px;
+	background-color: var(--clr-border);
+	margin: 0.5rem 0;
+}

@@ -16,6 +16,8 @@ type RegisterCredentials = {
 	passwordConfirm: string;
 };
 
+type FormType = 'login' | 'register';
+
 const mockAuth: LoginCredentials = {
 	username: 'testuser',
 	password: 'test123',
@@ -41,6 +43,8 @@ function App() {
 	);
 	const [isAuth, setIsAuth] = useState(false);
 
+	const [formType, setFormType] = useState('login' as FormType);
+
 	const checkIsLoggedIn = (
 		credentials: RegisterCredentials | LoginCredentials
 	): void => {
@@ -55,7 +59,7 @@ function App() {
 			<Navbar />
 			<Switch>
 				<Route path={'/auth'} exact>
-					<AuthPage />
+					<AuthPage formType={formType} setFormType={setFormType} />
 				</Route>
 				<Route path={'/categories'} exact>
 					<CategoryPage />
