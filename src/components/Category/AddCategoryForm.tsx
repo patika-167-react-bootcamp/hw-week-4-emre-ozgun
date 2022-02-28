@@ -5,6 +5,13 @@ import { colorGenerator } from '../../utils/colorGenerator';
 import { Category, CategoryContext } from '../../category-context';
 import './AddCategoryForm.css';
 
+const reset = {
+	id: Math.random() * 1000,
+	title: '',
+	status: [{ id: idGenerator(), title: '', color: '#ff9500' }],
+	todo: [{ id: idGenerator(), title: '', statusId: 0 }],
+};
+
 type AddCategoryFormProps = {
 	isAddCategoryFormOpen: boolean;
 	setIsAddCategoryFormOpen: React.Dispatch<React.SetStateAction<boolean>>;
@@ -21,7 +28,7 @@ export const AddCategoryForm = ({
 		id: Math.random() * 1000,
 		title: '',
 		status: [{ id: idGenerator(), title: '', color: '#ff9500' }],
-		todo: [{ id: idGenerator(), title: '', statusId: '' }],
+		todo: [{ id: idGenerator(), title: '', statusId: 0 }],
 	};
 
 	const [disable, setDisable] = useState(true);
@@ -35,7 +42,7 @@ export const AddCategoryForm = ({
 		} else if (singleCategory.status.some((s) => !s.title.length)) {
 			setDisable(true);
 		} else if (
-			singleCategory.todo.some((t) => !t.title.length || !t.statusId.length)
+			singleCategory.todo.some((t) => !t.title.length || !t.statusId)
 		) {
 			setDisable(true);
 		} else {
@@ -45,14 +52,23 @@ export const AddCategoryForm = ({
 
 	const handleCategorySubmit = (e: React.FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
-		addCategory?.(singleCategory);
+
+		// numify statusId
+		const finalState = {
+			...singleCategory,
+			todo: singleCategory.todo.map((t) => ({
+				...t,
+				statusId: Number(t.statusId),
+			})),
+		};
+
+		addCategory?.(finalState);
 		setIsAddCategoryFormOpen(false);
-		setSingleCategory({
-			id: Math.random() * 1000,
-			title: '',
-			status: [{ id: idGenerator(), title: '', color: '#ff9500' }],
-			todo: [{ id: idGenerator(), title: '', statusId: '' }],
-		});
+		setSingleCategory(reset);
+	};
+
+	const handleFormReset = () => {
+		setSingleCategory(reset);
 	};
 
 	const handleTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -117,7 +133,7 @@ export const AddCategoryForm = ({
 		const newTodo = {
 			id: idGenerator(),
 			title: '',
-			statusId: '',
+			statusId: 0,
 		};
 
 		setSingleCategory((prev) => {
@@ -300,6 +316,14 @@ export const AddCategoryForm = ({
 				disabled={disable}
 			>
 				ADD CATEGORY
+			</button>
+			<button
+				onClick={() => handleFormReset()}
+				style={{ backgroundColor: '#333', color: '#eee', marginTop: '-0.5rem' }}
+				type='button'
+				className='btn form__btn form__btn-submit'
+			>
+				RESET
 			</button>
 		</form>
 	);
