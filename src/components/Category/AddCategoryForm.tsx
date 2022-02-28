@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 
 import { idGenerator } from '../../utils/idGenerator';
 import { colorGenerator } from '../../utils/colorGenerator';
-import { Category } from '../../category-context';
+import { Category, CategoryContext } from '../../category-context';
 import './AddCategoryForm.css';
 
 type AddCategoryFormProps = {
@@ -15,7 +15,7 @@ export const AddCategoryForm = ({
 	setIsAddCategoryFormOpen,
 }: AddCategoryFormProps) => {
 	// import addCategory from global context to add  new category
-	// const {addCategory} = useContext(CategoryContext)
+	const { addCategory } = useContext(CategoryContext);
 
 	const initialAddFormState: Category = {
 		id: Math.random() * 1000,
@@ -24,12 +24,29 @@ export const AddCategoryForm = ({
 		todo: [{ id: idGenerator(), title: '', statusId: '' }],
 	};
 
+	const [disable, setDisable] = useState(true);
+
 	const [singleCategory, setSingleCategory] =
 		useState<Category>(initialAddFormState);
 
+	useEffect(() => {
+		if (!singleCategory.title.length) {
+			setDisable(true);
+		} else if (singleCategory.status.some((s) => !s.title.length)) {
+			setDisable(true);
+		} else if (
+			singleCategory.todo.some((t) => !t.title.length || !t.statusId.length)
+		) {
+			setDisable(true);
+		} else {
+			setDisable(false);
+		}
+	}, [singleCategory.title, singleCategory.status, singleCategory.todo]);
+
 	const handleCategorySubmit = (e: React.FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
-		console.log(singleCategory);
+		addCategory?.(singleCategory);
+		setIsAddCategoryFormOpen(false);
 		setSingleCategory({
 			id: Math.random() * 1000,
 			title: '',
@@ -84,6 +101,10 @@ export const AddCategoryForm = ({
 	};
 
 	const handleRemoveStatus = (i: number) => {
+		if (singleCategory.status.length === 1) {
+			return;
+		}
+
 		setSingleCategory((prev) => {
 			return {
 				...prev,
@@ -113,7 +134,6 @@ export const AddCategoryForm = ({
 			| React.ChangeEvent<HTMLSelectElement>,
 		i: number
 	) => {
-		console.log(e.target.value);
 		setSingleCategory((prev) => {
 			const newTodo = prev.todo.map((t, idx) => {
 				if (idx === i) {
@@ -133,6 +153,10 @@ export const AddCategoryForm = ({
 	};
 
 	const handleRemoveTodo = (i: number) => {
+		if (singleCategory.todo.length === 1) {
+			return;
+		}
+
 		setSingleCategory((prev) => {
 			return {
 				...prev,
@@ -204,6 +228,7 @@ export const AddCategoryForm = ({
 						/>
 						<button
 							className='form__remove-field'
+							type='button'
 							onClick={() => handleRemoveStatus(i)}
 						>
 							x
@@ -259,6 +284,7 @@ export const AddCategoryForm = ({
 						</select>
 
 						<button
+							type='button'
 							className='form__remove-field'
 							onClick={() => handleRemoveTodo(i)}
 						>
@@ -268,7 +294,11 @@ export const AddCategoryForm = ({
 				))}
 			</div>
 
-			<button type='submit' className='btn form__btn'>
+			<button
+				type='submit'
+				className='btn form__btn form__btn-submit'
+				disabled={disable}
+			>
 				ADD CATEGORY
 			</button>
 		</form>

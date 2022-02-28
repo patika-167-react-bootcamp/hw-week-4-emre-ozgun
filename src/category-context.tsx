@@ -1,13 +1,14 @@
 import React, { createContext, useState } from 'react';
+import { idGenerator } from './utils/idGenerator';
 
 export type Status = {
-	id: string;
+	id: number;
 	title: string;
 	color: string;
 };
 
 export type Todo = {
-	id: string;
+	id: number;
 	title: string;
 	statusId: string;
 };
@@ -24,28 +25,32 @@ const initialCategories: Category[] = [
 		id: 1,
 		title: 'Practice English',
 		status: [
-			{ id: 'a1', title: 'In Progress', color: '#ecb341' },
-			{ id: 'aa1', title: 'Urgent', color: '#ed562c' },
+			{ id: idGenerator(), title: 'In Progress', color: '#ecb341' },
+			{ id: idGenerator(), title: 'Urgent', color: '#ed562c' },
 		],
 		todo: [
-			{ id: 'b1', title: 'Academic Vocabulary', statusId: 'a1' },
-			{ id: 'b11', title: 'Read Articles', statusId: 'a1' },
+			{ id: idGenerator(), title: 'Academic Vocabulary', statusId: 'a1' },
+			{ id: idGenerator(), title: 'Read Articles', statusId: 'a1' },
 		],
 	},
 	{
 		id: 2,
 		title: 'Keep up with development trends, Keep up with development trends',
-		status: [{ id: 'a2', title: 'Urgent', color: '#ed562c' }],
+		status: [{ id: idGenerator(), title: 'Urgent', color: '#ed562c' }],
 		todo: [
-			{ id: 'b2', title: 'Practice CSS-In-JS', statusId: 'a2' },
-			{ id: 'b22', title: 'Docker and Containerization', statusId: 'a2' },
+			{ id: idGenerator(), title: 'Practice CSS-In-JS', statusId: 'a2' },
+			{
+				id: idGenerator(),
+				title: 'Docker and Containerization',
+				statusId: 'a2',
+			},
 		],
 	},
 	{
 		id: 3,
 		title: 'React JS',
-		status: [{ id: 'a3', title: 'Idle', color: '#2DCCEE' }],
-		todo: [{ id: 'b3', title: 'Redux Toolkit', statusId: 'a3' }],
+		status: [{ id: idGenerator(), title: 'Idle', color: '#2DCCEE' }],
+		todo: [{ id: idGenerator(), title: 'Redux Toolkit', statusId: 'a3' }],
 	},
 ];
 
@@ -63,12 +68,14 @@ export const CategoryProvider: React.FC = ({ children }) => {
 	const [categories, setCategories] = useState<Category[]>(initialCategories);
 
 	const addCategory = (newCategory: Category) => {
-		setCategories((prev) => [...prev, newCategory]);
+		setCategories((prev) => [newCategory, ...prev]);
 	};
 
 	const removeCategory = (categoryId: number) => {
 		setCategories(categories.filter((c) => c.id !== categoryId));
 	};
+
+	console.log(categories);
 
 	return (
 		<CategoryContext.Provider
