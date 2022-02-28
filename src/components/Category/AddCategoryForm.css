@@ -54,6 +54,9 @@
 	width: 42.5%;
 }
 .form__block-inline > select {
+	background-color: transparent;
+
+	padding: 0;
 	width: 42.5%;
 }
 .form__block-inline > button {

@@ -27,11 +27,16 @@ export const AddCategoryForm = ({
 	const [singleCategory, setSingleCategory] =
 		useState<Category>(initialAddFormState);
 
-	// const handleCategorySubmit = (e) => {
-	//   e.preventDefault();
-	//   addCategory(singleCategory)
-	// 	setSingleCategory(initialAddFormState);
-	// };
+	const handleCategorySubmit = (e: React.FormEvent<HTMLFormElement>) => {
+		e.preventDefault();
+		console.log(singleCategory);
+		setSingleCategory({
+			id: Math.random() * 1000,
+			title: '',
+			status: [{ id: idGenerator(), title: '', color: '#ff9500' }],
+			todo: [{ id: idGenerator(), title: '', statusId: '' }],
+		});
+	};
 
 	const handleTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 		setSingleCategory({
@@ -73,7 +78,7 @@ export const AddCategoryForm = ({
 		setSingleCategory((prev) => {
 			return {
 				...prev,
-				status: [newStatus, ...prev.status],
+				status: [...prev.status, newStatus],
 			};
 		});
 	};
@@ -97,7 +102,7 @@ export const AddCategoryForm = ({
 		setSingleCategory((prev) => {
 			return {
 				...prev,
-				todo: [newTodo, ...prev.todo],
+				todo: [...prev.todo, newTodo],
 			};
 		});
 	};
@@ -108,6 +113,7 @@ export const AddCategoryForm = ({
 			| React.ChangeEvent<HTMLSelectElement>,
 		i: number
 	) => {
+		console.log(e.target.value);
 		setSingleCategory((prev) => {
 			const newTodo = prev.todo.map((t, idx) => {
 				if (idx === i) {
@@ -135,11 +141,12 @@ export const AddCategoryForm = ({
 		});
 	};
 
-	// console.log(singleCategory);
-
 	// onSubmit={(e) => handleCategorySubmit}
 	return (
-		<form className={`form form-add ${isAddCategoryFormOpen && 'active'}`}>
+		<form
+			onSubmit={(e) => handleCategorySubmit(e)}
+			className={`form form-add ${isAddCategoryFormOpen && 'active'}`}
+		>
 			<h1 className='form__title'>Add Category</h1>
 			<button
 				className='form-add__btn-delete'
@@ -232,18 +239,23 @@ export const AddCategoryForm = ({
 						<select
 							name='statusId'
 							className='form__block-input'
-							value={'...???'}
+							defaultValue={'--Select Status--'}
 							onChange={(e) => handleTodoChange(e, i)}
 						>
-							{singleCategory.status.map((status, idx) => (
-								<option
-									className='form__status-options'
-									value={status.id}
-									key={status.id}
-								>
-									{status.title}
-								</option>
-							))}
+							<option value='' className='form__status-options'>
+								Select Status
+							</option>
+							{singleCategory.status
+								.filter((s) => Boolean(s.title))
+								.map((status, idx) => (
+									<option
+										className='form__status-options'
+										value={status.id}
+										key={status.id}
+									>
+										{status.title}
+									</option>
+								))}
 						</select>
 
 						<button
