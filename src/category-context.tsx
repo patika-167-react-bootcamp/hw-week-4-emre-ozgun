@@ -65,7 +65,7 @@ export const CategoryContext = createContext<CategoryContextType>({
 });
 
 export const CategoryProvider: React.FC = ({ children }) => {
-	const [categories, setCategories] = useState<Category[]>(initialCategories);
+	const [categories, setCategories] = useState<Category[]>([] as Category[]);
 
 	const addCategory = (newCategory: Category) => {
 		setCategories((prev) => [newCategory, ...prev]);

@@ -34,27 +34,29 @@ export const RegisterForm = ({ setFormType }: Props) => {
 		}
 	}, [credentials.username, credentials.password, credentials.passwordConfirm]);
 
-	const testPost = async (token: string) => {
+	// TEST - COOKIES
+
+	//	/category - POST
+	const testPost = async () => {
+		// mock post
 		const title = {
 			title: 'hello from client side',
 		};
 
-		const category = await axios.post(`${baseUrl}/category`, title, {
-			headers: { Authorization: `Bearer ${token}` },
-		});
-		console.log('after post category', category.data);
+		const category = await axios.post(`${baseUrl}/category`, title);
+		//CORS error
+		console.log(category.data);
 	};
 
+	// /auth/register - POST
 	const postRegister = async (credentials: Credentials) => {
-		const response = await axios.post(`${baseUrl}/auth/register`, credentials, {
-			withCredentials: false,
-		});
+		const response = await axios.post(`${baseUrl}/auth/register`, credentials);
 
 		const token = response.data.token;
+		axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+		console.log(response.data);
 
-		console.log('token', token);
-
-		testPost(token);
+		testPost();
 	};
 
 	const handleRegisterSubmit = (e: React.FormEvent<HTMLFormElement>) => {
