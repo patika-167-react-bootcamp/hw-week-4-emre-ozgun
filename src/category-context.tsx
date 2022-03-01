@@ -23,7 +23,7 @@ export type Category = {
 const initialCategories: Category[] = [
 	{
 		id: 1,
-		title: 'Practice English',
+		title: 'Frontend uygulamalari',
 		status: [
 			{ id: idGenerator(), title: 'In Progress', color: '#ecb341' },
 			{ id: idGenerator(), title: 'Urgent', color: '#ed562c' },

@@ -1,6 +1,4 @@
 import React from 'react';
-// import user from '../mockAuth/authenticatedUser.json';
-// import { useHistory } from 'react-router-dom';
 import { LoginForm } from '../components/UserForms/LoginForm';
 import { RegisterForm } from '../components/UserForms/RegisterForm';
 
