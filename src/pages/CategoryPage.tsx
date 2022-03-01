@@ -9,8 +9,6 @@ export const CategoryPage = () => {
 
 	const [isAddCategoryFormOpen, setIsAddCategoryFormOpen] = useState(false);
 
-	const openAddCategoryForm = () => {};
-
 	return (
 		<main className='container'>
 			<section className='section section-categories'>

@@ -123,10 +123,3 @@ input[type='color'] {
 	outline: 0;
 	cursor: pointer;
 }
-
-button:disabled,
-button[disabled] {
-	background-color: var(--clr-bg-light);
-	color: var(--clr-text);
-	cursor: not-allowed;
-}

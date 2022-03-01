@@ -1,6 +1,4 @@
-import React, { useState } from 'react';
-// import user from '../mockAuth/authenticatedUser.json';
-// import { useHistory } from 'react-router-dom';
+import React from 'react';
 import { LoginForm } from '../components/UserForms/LoginForm';
 import { RegisterForm } from '../components/UserForms/RegisterForm';
 

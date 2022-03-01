@@ -1,11 +1,15 @@
 import React from 'react';
 import './UserForm.css';
+import { AuthContext } from '../../context/auth-context';
+import axios from 'axios';
 
 type Props = {
 	setFormType: React.Dispatch<React.SetStateAction<'login' | 'register'>>;
 };
 
 export const LoginForm = ({ setFormType }: Props) => {
+	console.log(process.env.REACT_APP_URL);
+
 	return (
 		<form className='form'>
 			<h1 className='form__title'>Login</h1>

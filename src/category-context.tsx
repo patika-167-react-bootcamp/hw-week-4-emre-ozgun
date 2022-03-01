@@ -10,7 +10,7 @@ export type Status = {
 export type Todo = {
 	id: number;
 	title: string;
-	statusId: string;
+	statusId: Status['id'];
 };
 
 export type Category = {
@@ -23,14 +23,14 @@ export type Category = {
 const initialCategories: Category[] = [
 	{
 		id: 1,
-		title: 'Practice English',
+		title: 'Frontend uygulamalari',
 		status: [
 			{ id: idGenerator(), title: 'In Progress', color: '#ecb341' },
 			{ id: idGenerator(), title: 'Urgent', color: '#ed562c' },
 		],
 		todo: [
-			{ id: idGenerator(), title: 'Academic Vocabulary', statusId: 'a1' },
-			{ id: idGenerator(), title: 'Read Articles', statusId: 'a1' },
+			{ id: idGenerator(), title: 'Academic Vocabulary', statusId: 25257 },
+			{ id: idGenerator(), title: 'Read Articles', statusId: 29582058 },
 		],
 	},
 	{
@@ -38,11 +38,11 @@ const initialCategories: Category[] = [
 		title: 'Keep up with development trends, Keep up with development trends',
 		status: [{ id: idGenerator(), title: 'Urgent', color: '#ed562c' }],
 		todo: [
-			{ id: idGenerator(), title: 'Practice CSS-In-JS', statusId: 'a2' },
+			{ id: idGenerator(), title: 'Practice CSS-In-JS', statusId: 250982508 },
 			{
 				id: idGenerator(),
 				title: 'Docker and Containerization',
-				statusId: 'a2',
+				statusId: 3390383,
 			},
 		],
 	},
@@ -50,7 +50,7 @@ const initialCategories: Category[] = [
 		id: 3,
 		title: 'React JS',
 		status: [{ id: idGenerator(), title: 'Idle', color: '#2DCCEE' }],
-		todo: [{ id: idGenerator(), title: 'Redux Toolkit', statusId: 'a3' }],
+		todo: [{ id: idGenerator(), title: 'Redux Toolkit', statusId: 25952858 }],
 	},
 ];
 
@@ -65,7 +65,7 @@ export const CategoryContext = createContext<CategoryContextType>({
 });
 
 export const CategoryProvider: React.FC = ({ children }) => {
-	const [categories, setCategories] = useState<Category[]>(initialCategories);
+	const [categories, setCategories] = useState<Category[]>([] as Category[]);
 
 	const addCategory = (newCategory: Category) => {
 		setCategories((prev) => [newCategory, ...prev]);
