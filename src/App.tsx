@@ -2,9 +2,10 @@ import React, { useContext, useState } from 'react';
 import { Redirect, Route, Switch } from 'react-router-dom';
 import { AuthPage } from './pages/AuthPage';
 import { CategoryPage } from './pages/CategoryPage';
-import { HomePage } from './pages/HomePage';
+import { PageNotFound } from './pages/PageNotFound';
 import { Navbar } from './components/Navbar/Navbar';
 import { AuthContext } from './context/auth-context';
+
 import './App.css';
 
 type FormType = 'login' | 'register';
@@ -19,8 +20,11 @@ function App() {
 			<Navbar />
 			<Switch>
 				<Route path={'/'} exact>
-					<HomePage />
-					{/* {auth ? <HomePage /> : <Redirect to='/auth' />} */}
+					{!isAuth ? (
+						<AuthPage formType={formType} setFormType={setFormType} />
+					) : (
+						<Redirect to='/categories' />
+					)}
 				</Route>
 				<Route path={'/auth'} exact>
 					{!isAuth ? (
@@ -31,6 +35,9 @@ function App() {
 				</Route>
 				<Route path={'/categories'} exact>
 					{!isAuth ? <Redirect to='/auth' /> : <CategoryPage />}
+				</Route>
+				<Route path={'*'} exact>
+					<PageNotFound />
 				</Route>
 			</Switch>
 		</>
