@@ -1,5 +1,5 @@
 import React, { createContext, useState } from 'react';
-import { idGenerator } from './utils/idGenerator';
+import { idGenerator } from '../utils/idGenerator';
 
 export type Status = {
 	id: number;

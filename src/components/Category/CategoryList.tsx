@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { Category } from '../../category-context';
+import { Category } from '../../context/category-context';
 import { SingleCategory } from './SingleCategory';
 import './Category.css';
 

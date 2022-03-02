@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
 import { AuthContext } from '../context/auth-context';
 
@@ -7,14 +7,15 @@ export const PageNotFound = () => {
 
 	const { isAuth } = React.useContext(AuthContext);
 
-	const [message, setMessage] = useState(`Page not found, redirecting}...`);
+	const message = 'Page not found, redirecting...';
 
-	React.useEffect(() => {
+	useEffect(() => {
 		const timeout = setTimeout(() => {
 			history.push(`/${isAuth ? 'categories' : 'auth'}`);
 		}, 3000);
 
 		return () => clearTimeout(timeout);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
 	return (

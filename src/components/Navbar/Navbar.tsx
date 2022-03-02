@@ -6,7 +6,7 @@ import { getToken } from '../../utils/getToken';
 
 export const Navbar = () => {
 	const { isAuth, setIsAuth } = useContext(AuthContext);
-	const { username, id } = getToken();
+	const { id } = getToken();
 
 	const handleLogout = () => {
 		localStorage.clear();
@@ -25,7 +25,7 @@ export const Navbar = () => {
 								className='nav__list-link'
 								activeClassName='is-active'
 							>
-								Logout {`${username}id:${id}`}
+								Logout {`(${id})`}
 							</NavLink>
 						</li>
 					) : (

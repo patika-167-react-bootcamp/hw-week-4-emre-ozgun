@@ -1,5 +1,5 @@
 import { useContext, useState } from 'react';
-import { CategoryContext } from '../category-context';
+import { CategoryContext } from '../context/category-context';
 
 import { CategoryList } from '../components/Category/CategoryList';
 import { AddCategoryForm } from '../components/Category/AddCategoryForm';

@@ -20,11 +20,7 @@ function App() {
 			<Navbar />
 			<Switch>
 				<Route path={'/'} exact>
-					{!isAuth ? (
-						<AuthPage formType={formType} setFormType={setFormType} />
-					) : (
-						<Redirect to='/categories' />
-					)}
+					{!isAuth ? <Redirect to='/auth' /> : <Redirect to='/categories' />}
 				</Route>
 				<Route path={'/auth'} exact>
 					{!isAuth ? (

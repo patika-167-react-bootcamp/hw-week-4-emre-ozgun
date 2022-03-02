@@ -1,7 +1,7 @@
 import React, { useContext } from 'react';
-import { Category } from '../../category-context';
+import { Category } from '../../context/category-context';
 import './Category.css';
-import { CategoryContext } from '../../category-context';
+import { CategoryContext } from '../../context/category-context';
 
 type SingleCategoryProps = {
 	category: Category;

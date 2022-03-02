@@ -2,7 +2,7 @@ import React, { useState, useContext, useEffect } from 'react';
 
 import { idGenerator } from '../../utils/idGenerator';
 import { colorGenerator } from '../../utils/colorGenerator';
-import { Category, CategoryContext } from '../../category-context';
+import { Category, CategoryContext } from '../../context/category-context';
 import './AddCategoryForm.css';
 
 const reset = {

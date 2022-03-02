@@ -1,14 +1,12 @@
 import React, { useState, useEffect, useContext } from 'react';
 import './UserForm.css';
 import { AuthContext, Credentials } from '../../context/auth-context';
-import axios from 'axios';
-import { setToken } from '../../utils/setToken';
-import { checkAuth } from '../../utils/checkAuth';
+
+import { POST_REGISTER } from '../../api/authUser';
 
 type Props = {
 	setFormType: React.Dispatch<React.SetStateAction<'login' | 'register'>>;
 };
-const baseUrl = process.env.REACT_APP_URL;
 
 const initialRegisterState: Credentials = {
 	username: '',
@@ -17,7 +15,7 @@ const initialRegisterState: Credentials = {
 };
 
 export const RegisterForm = ({ setFormType }: Props) => {
-	const { isAuth, setIsAuth } = useContext(AuthContext);
+	const { setIsAuth } = useContext(AuthContext);
 
 	const [credentials, setCredentials] =
 		useState<Credentials>(initialRegisterState);
@@ -41,8 +39,21 @@ export const RegisterForm = ({ setFormType }: Props) => {
 
 	const handleRegisterSubmit = (e: React.FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
-		postRegister(credentials);
+		handleRegisterUser(credentials);
 		setCredentials(initialRegisterState);
+	};
+
+	const handleRegisterUser = async (credentials: Credentials) => {
+		const result = await POST_REGISTER(credentials);
+
+		const error = result?.error;
+		const isAuth = result?.authFlag;
+
+		if (isAuth) {
+			setIsAuth?.(true);
+		} else {
+			setErrorMsg(error);
+		}
 	};
 
 	// error handling
@@ -54,26 +65,24 @@ export const RegisterForm = ({ setFormType }: Props) => {
 		return () => clearTimeout(timeout);
 	}, [errorMsg]);
 
-	// /auth/register - POST
-	const postRegister = async (credentials: Credentials) => {
-		try {
-			const response = await axios.post(
-				`${baseUrl}/auth/register`,
-				credentials
-			);
+	// // /auth/register - POST
+	// const postRegister = async (credentials: Credentials) => {
+	// 	try {
+	// 		const response = await axios.post(
+	// 			`${baseUrl}/auth/register`,
+	// 			credentials
+	// 		);
 
-			const token = response.data.token;
-			if (token) {
-				axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-				setToken(response.data);
-				setIsAuth?.(true);
-			}
-		} catch (error: any) {
-			setErrorMsg(`${error.response.data}`);
-		}
-
-		// testPost();
-	};
+	// 		const token = response.data.token;
+	// 		if (token) {
+	// 			axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+	// 			setToken(response.data);
+	// 			setIsAuth?.(true);
+	// 		}
+	// 	} catch (error: any) {
+	// 		setErrorMsg(`${error.response.data}`);
+	// 	}
+	// };
 
 	return (
 		<form className='form' onSubmit={(e) => handleRegisterSubmit(e)}>
