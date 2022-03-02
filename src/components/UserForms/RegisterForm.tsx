@@ -1,7 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import './UserForm.css';
 import { AuthContext, Credentials } from '../../context/auth-context';
 import axios from 'axios';
+import { setToken } from '../../utils/setToken';
+import { checkAuth } from '../../utils/checkAuth';
 
 type Props = {
 	setFormType: React.Dispatch<React.SetStateAction<'login' | 'register'>>;
@@ -15,10 +17,13 @@ const initialRegisterState: Credentials = {
 };
 
 export const RegisterForm = ({ setFormType }: Props) => {
+	const { isAuth, setIsAuth } = useContext(AuthContext);
+
 	const [credentials, setCredentials] =
 		useState<Credentials>(initialRegisterState);
 
 	const [disabled, setDisabled] = useState(true);
+	const [errorMsg, setErrorMsg] = useState('');
 
 	// basic input validation
 	useEffect(() => {
@@ -34,40 +39,46 @@ export const RegisterForm = ({ setFormType }: Props) => {
 		}
 	}, [credentials.username, credentials.password, credentials.passwordConfirm]);
 
-	// TEST - COOKIES
-
-	//	/category - POST
-	const testPost = async () => {
-		// mock post
-		const title = {
-			title: 'hello from client side',
-		};
-
-		const category = await axios.post(`${baseUrl}/category`, title);
-		//CORS error
-		console.log(category.data);
-	};
-
-	// /auth/register - POST
-	const postRegister = async (credentials: Credentials) => {
-		const response = await axios.post(`${baseUrl}/auth/register`, credentials);
-
-		const token = response.data.token;
-		axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-		console.log(response.data);
-
-		testPost();
-	};
-
 	const handleRegisterSubmit = (e: React.FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
 		postRegister(credentials);
 		setCredentials(initialRegisterState);
 	};
 
+	// error handling
+	useEffect(() => {
+		const timeout = setTimeout(() => {
+			setErrorMsg('');
+		}, 3000);
+
+		return () => clearTimeout(timeout);
+	}, [errorMsg]);
+
+	// /auth/register - POST
+	const postRegister = async (credentials: Credentials) => {
+		try {
+			const response = await axios.post(
+				`${baseUrl}/auth/register`,
+				credentials
+			);
+
+			const token = response.data.token;
+			if (token) {
+				axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+				setToken(response.data);
+				setIsAuth?.(true);
+			}
+		} catch (error: any) {
+			setErrorMsg(`${error.response.data}`);
+		}
+
+		// testPost();
+	};
+
 	return (
 		<form className='form' onSubmit={(e) => handleRegisterSubmit(e)}>
 			<h1 className='form__title'>Register</h1>
+			<p style={{ color: 'red', opacity: '0.8' }}>{errorMsg}</p>
 			<div className='form__block'>
 				<label htmlFor='email' className='form__block-label'>
 					Username

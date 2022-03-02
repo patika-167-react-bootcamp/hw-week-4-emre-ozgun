@@ -1,4 +1,8 @@
-import React, { createContext, useState } from 'react';
+import React, { createContext, useState, useEffect } from 'react';
+import axios from 'axios';
+import { getToken } from '../utils/getToken';
+
+const baseUrl = process.env.REACT_APP_URL;
 
 export type Credentials = {
 	username: string;
@@ -7,29 +11,46 @@ export type Credentials = {
 };
 
 type AuthContextType = {
-	credentials: Credentials;
-	isAuth?: boolean;
+	isAuth: boolean;
 	setIsAuth?: React.Dispatch<React.SetStateAction<boolean>>;
-	setCredentials?: React.Dispatch<React.SetStateAction<Credentials>>;
-};
-const initialCredentials: Credentials = {
-	username: '',
-	password: '',
-	passwordConfirm: '',
 };
 
-export const AuthContext = createContext<AuthContextType>({
-	credentials: initialCredentials,
-});
+export const AuthContext = createContext<AuthContextType>({ isAuth: false });
 
 export const AuthContextProvider: React.FC = ({ children }) => {
-	const [credentials, setCredentials] =
-		useState<Credentials>(initialCredentials);
+	const [isAuth, setIsAuth] = useState(false);
 
-	// const [isAuth, setIsAuth] = useState(false);
+	const checkAuth = async () => {
+		const { token } = getToken();
+
+		if (!token) {
+			console.log('no token found');
+			setIsAuth(false);
+		} else {
+			console.log('token found, trying to  get category');
+			axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+			const { status } = await axios.get(`${baseUrl}/category`, {
+				validateStatus: () => true,
+			});
+			if (status >= 400) {
+				console.log('token invalid', status);
+				setIsAuth(false);
+				localStorage.clear();
+			} else {
+				console.log('token valid', status);
+				setIsAuth(true);
+			}
+		}
+	};
+
+	useEffect(() => {
+		checkAuth();
+	}, [isAuth]);
+
+	console.log(isAuth);
 
 	return (
-		<AuthContext.Provider value={{ credentials, setCredentials }}>
+		<AuthContext.Provider value={{ isAuth, setIsAuth }}>
 			{children}
 		</AuthContext.Provider>
 	);

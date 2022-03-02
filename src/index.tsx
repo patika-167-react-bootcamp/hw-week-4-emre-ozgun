@@ -5,6 +5,8 @@ import App from './App';
 import { CategoryProvider } from './category-context';
 import { AuthContextProvider } from './context/auth-context';
 
+// Filter Context -> final functionality after crud.
+
 ReactDOM.render(
 	<AuthContextProvider>
 		<BrowserRouter>

@@ -8,8 +8,6 @@ type Props = {
 };
 
 export const LoginForm = ({ setFormType }: Props) => {
-	console.log(process.env.REACT_APP_URL);
-
 	return (
 		<form className='form'>
 			<h1 className='form__title'>Login</h1>
