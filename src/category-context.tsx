@@ -75,7 +75,7 @@ export const CategoryProvider: React.FC = ({ children }) => {
 		setCategories(categories.filter((c) => c.id !== categoryId));
 	};
 
-	console.log(categories);
+	// console.log(categories);
 
 	return (
 		<CategoryContext.Provider

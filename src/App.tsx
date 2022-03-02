@@ -1,8 +1,11 @@
-import React, { useState } from 'react';
-import { Route, Switch } from 'react-router-dom';
+import React, { useContext, useState } from 'react';
+import { Redirect, Route, Switch } from 'react-router-dom';
 import { AuthPage } from './pages/AuthPage';
 import { CategoryPage } from './pages/CategoryPage';
+import { PageNotFound } from './pages/PageNotFound';
 import { Navbar } from './components/Navbar/Navbar';
+import { AuthContext } from './context/auth-context';
+
 import './App.css';
 
 type FormType = 'login' | 'register';
@@ -10,15 +13,31 @@ type FormType = 'login' | 'register';
 function App() {
 	const [formType, setFormType] = useState('login' as FormType);
 
+	const { isAuth } = useContext(AuthContext);
+
 	return (
 		<>
 			<Navbar />
 			<Switch>
+				<Route path={'/'} exact>
+					{!isAuth ? (
+						<AuthPage formType={formType} setFormType={setFormType} />
+					) : (
+						<Redirect to='/categories' />
+					)}
+				</Route>
 				<Route path={'/auth'} exact>
-					<AuthPage formType={formType} setFormType={setFormType} />
+					{!isAuth ? (
+						<AuthPage formType={formType} setFormType={setFormType} />
+					) : (
+						<Redirect to='/categories' />
+					)}
 				</Route>
 				<Route path={'/categories'} exact>
-					<CategoryPage />
+					{!isAuth ? <Redirect to='/auth' /> : <CategoryPage />}
+				</Route>
+				<Route path={'*'} exact>
+					<PageNotFound />
 				</Route>
 			</Switch>
 		</>

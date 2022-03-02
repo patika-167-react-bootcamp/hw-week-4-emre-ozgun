@@ -1,13 +1,34 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import './Navbar.css';
 import { NavLink } from 'react-router-dom';
+import { AuthContext } from '../../context/auth-context';
+import { getToken } from '../../utils/getToken';
 
 export const Navbar = () => {
+	const { isAuth, setIsAuth } = useContext(AuthContext);
+	const { username, id } = getToken();
+
+	const handleLogout = () => {
+		localStorage.clear();
+		setIsAuth?.(false);
+	};
+
 	return (
 		<header className='header'>
 			<nav className='nav'>
 				<ul className='nav__list'>
-					<li className='nav__list-item'>
+					{isAuth ? (
+						<li className='nav__list-item'>
+							<NavLink
+								onClick={() => handleLogout()}
+								to='/auth'
+								className='nav__list-link'
+								activeClassName='is-active'
+							>
+								Logout {`${username}id:${id}`}
+							</NavLink>
+						</li>
+					) : (
 						<NavLink
 							to='/auth'
 							className='nav__list-link'
@@ -15,7 +36,7 @@ export const Navbar = () => {
 						>
 							Login
 						</NavLink>
-					</li>
+					)}
 					<li className='nav__list-item'>
 						<NavLink
 							to='/categories'
