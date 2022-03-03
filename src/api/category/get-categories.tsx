@@ -1,6 +1,5 @@
 import axios from 'axios';
 import { Status, Todo, Category } from '../../context/category-context';
-axios.defaults.baseURL = '/api/';
 
 export const GET_CATEGORIES = async (userId: number) => {
 	const baseUrl = process.env.REACT_APP_URL;
@@ -39,45 +38,52 @@ export const GET_CATEGORIES = async (userId: number) => {
 		compositeState.push(stateInstance);
 	}
 
-	const todoResponse = await axios.get(`${baseUrl}/todo`);
-	const todos = todoResponse.data.filter(
-		(todo: Todo) => todo.userId === userId
-	);
+	// // map todos by category and userId
+	// const todoResponse = await axios.get(`${baseUrl}/todo`);
+	// const todos = todoResponse.data.filter(
+	// 	(todo: Todo) => todo.userId === userId
+	// );
 
-	const mapTodosByCategory = todos.reduce((acc: any, todo: Todo) => {
-		const category = String(todo.categoryId);
+	// const mapTodosByCategory = todos.reduce((acc: any, todo: Todo) => {
+	// 	const category = String(todo.categoryId);
 
-		return {
-			...acc,
-			[category]: acc[category] ? [...acc[category], todo] : [todo],
-		};
-	}, {});
-
-	console.log({ mapTodosByCategory });
-
-	// // insert todos into corresponding categories
-	// for (let i = 0; i < compositeState.length; i++) {
-	// 	const categoryId = compositeState[i].id;
-
-	// 	const todoResponse = await axios.get(`${baseUrl}/todo`);
-	// 	let todo = todoResponse.data;
-	// 	todo = todo
-	// 		.filter(
-	// 			(todo: Todo) => todo.categoryId === categoryId && todo.userId === userId
-	// 		)
-	// 		.map((todo: Todo) => {
-	// 			return {
-	// 				id: todo.id,
-	// 				title: todo.title,
-	// 				statusId: todo.statusId,
-	// 			};
-	// 		});
-
-	// 	compositeState[i] = {
-	// 		...compositeState[i],
-	// 		todo,
+	// 	return {
+	// 		...acc,
+	// 		[category]: acc[category] ? [...acc[category], todo] : [todo],
 	// 	};
+	// }, {});
+
+	// console.log({ mapTodosByCategory });
+
+	// for(let i = 0; i < compositeState.length; i++) {
+
 	// }
+
+	// PRE REFACTOR
+
+	// insert todos into corresponding categories
+	for (let i = 0; i < compositeState.length; i++) {
+		const categoryId = compositeState[i].id;
+
+		const todoResponse = await axios.get(`${baseUrl}/todo`);
+		let todo = todoResponse.data;
+		todo = todo
+			.filter(
+				(todo: Todo) => todo.categoryId === categoryId && todo.userId === userId
+			)
+			.map((todo: Todo) => {
+				return {
+					id: todo.id,
+					title: todo.title,
+					statusId: todo.statusId,
+				};
+			});
+
+		compositeState[i] = {
+			...compositeState[i],
+			todo,
+		};
+	}
 
 	return compositeState;
 };

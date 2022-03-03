@@ -19,7 +19,11 @@ export const POST_REGISTER = async (registerCredentials: Credentials) => {
 			return { error: null, authFlag: true };
 		}
 	} catch (error: any) {
-		return { error: error.response.data, authFlag: false };
+		if (typeof error.response.data === 'string') {
+			return { error: error.response.data, authFlag: false };
+		} else {
+			return { error: 'Something went wrong', authFlag: false };
+		}
 	}
 };
 
@@ -39,6 +43,10 @@ export const POST_LOGIN = async (loginCredentials: Credentials) => {
 			return { error: null, authFlag: true };
 		}
 	} catch (error: any) {
-		return { error: error.response.data, authFlag: false };
+		if (typeof error.response.data === 'string') {
+			return { error: error.response.data, authFlag: false };
+		} else {
+			return { error: 'Something went wrong', authFlag: false };
+		}
 	}
 };

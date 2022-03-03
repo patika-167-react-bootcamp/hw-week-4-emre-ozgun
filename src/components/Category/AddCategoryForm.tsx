@@ -4,6 +4,10 @@ import { idGenerator } from '../../utils/idGenerator';
 import { colorGenerator } from '../../utils/colorGenerator';
 import { Category, CategoryContext } from '../../context/category-context';
 import './AddCategoryForm.css';
+import { Loader } from '../Loader/Loader';
+import { getToken } from '../../utils/getToken';
+import { useHistory } from 'react-router-dom';
+import { POST_CATEGORY } from '../../api/category/post-category';
 
 const reset = {
 	id: Math.random() * 1000,
@@ -21,6 +25,13 @@ export const AddCategoryForm = ({
 	isAddCategoryFormOpen,
 	setIsAddCategoryFormOpen,
 }: AddCategoryFormProps) => {
+	const history = useHistory();
+
+	const { id } = getToken();
+	if (!id) {
+		history.push('/auth');
+	}
+
 	// import addCategory from global context to add  new category
 	const { addCategory } = useContext(CategoryContext);
 
@@ -36,6 +47,9 @@ export const AddCategoryForm = ({
 	const [singleCategory, setSingleCategory] =
 		useState<Category>(initialAddFormState);
 
+	const [loading, setLoading] = useState(false);
+
+	// Form validation
 	useEffect(() => {
 		if (!singleCategory.title.length) {
 			setDisable(true);
@@ -50,6 +64,24 @@ export const AddCategoryForm = ({
 		}
 	}, [singleCategory.title, singleCategory.status, singleCategory.todo]);
 
+	const handlePostCategory = async (category: Category, userId: number) => {
+		console.log('in handlepost');
+		setLoading(true);
+
+		try {
+			// extract and post category to DB -- SERVER STATE
+			const newCategories = await POST_CATEGORY(category, userId);
+
+			//append to state -- UI STATE
+			addCategory?.(newCategories);
+
+			setLoading(false);
+		} catch (error) {
+			console.error(error);
+			setLoading(false);
+		}
+	};
+
 	const handleCategorySubmit = (e: React.FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
 
@@ -62,10 +94,13 @@ export const AddCategoryForm = ({
 			})),
 		};
 
-		addCategory?.(finalState);
+		handlePostCategory(finalState, id);
+
 		setIsAddCategoryFormOpen(false);
 		setSingleCategory(reset);
 	};
+
+	// DYNAMIC FORM HANDLERS
 
 	const handleFormReset = () => {
 		setSingleCategory(reset);
@@ -181,7 +216,12 @@ export const AddCategoryForm = ({
 		});
 	};
 
-	// onSubmit={(e) => handleCategorySubmit}
+	// END OF DYNAMIC FORM HANDLERS
+
+	if (loading) {
+		return <Loader />;
+	}
+
 	return (
 		<form
 			onSubmit={(e) => handleCategorySubmit(e)}
