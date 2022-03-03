@@ -6,11 +6,13 @@ import { AddCategoryForm } from '../components/Category/AddCategoryForm';
 import { getToken } from '../utils/getToken';
 import { useHistory } from 'react-router-dom';
 import { GET_CATEGORIES } from '../api/category/get-categories';
+import { Loader } from '../components/Loader/Loader';
 
 export const CategoryPage = () => {
 	const history = useHistory();
 	const { categories, setCategories } = useContext(CategoryContext);
 	const [isAddCategoryFormOpen, setIsAddCategoryFormOpen] = useState(false);
+	const [loading, setLoading] = useState(true);
 
 	const { id } = getToken();
 	if (!id) {
@@ -18,14 +20,27 @@ export const CategoryPage = () => {
 	}
 
 	const fetchCategories = async (userId: number) => {
-		const result = await GET_CATEGORIES(userId);
-		console.log(result);
-		setCategories?.(result);
+		setLoading(true);
+		try {
+			const result = await GET_CATEGORIES(userId);
+			console.log(result);
+			setLoading(false);
+			setCategories?.(result);
+		} catch (error) {
+			console.error(error);
+			setLoading(false);
+		}
 	};
 
 	useEffect(() => {
 		fetchCategories(id);
 	}, []);
+
+	// IMPLEMENT LOADER -> via loading state.
+
+	if (loading) {
+		return <Loader />;
+	}
 
 	return (
 		<main className='container'>

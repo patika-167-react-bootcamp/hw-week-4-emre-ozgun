@@ -4,7 +4,7 @@ import './Loader.css';
 export const Loader = () => {
 	return (
 		<main className='container'>
-			<section className='section'>
+			<section className='section section-loader'>
 				<div className='loader'></div>
 			</section>
 		</main>
