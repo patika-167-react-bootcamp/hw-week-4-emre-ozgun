@@ -24,20 +24,16 @@ export const AuthContextProvider: React.FC = ({ children }) => {
 		const { token } = getToken();
 
 		if (!token) {
-			console.log('no token found');
 			setIsAuth(false);
 		} else {
-			console.log('token found, trying to  get category');
 			axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
 			const { status } = await axios.get(`${baseUrl}/category`, {
 				validateStatus: () => true,
 			});
 			if (status >= 400) {
-				console.log('token invalid', status);
 				setIsAuth(false);
 				localStorage.clear();
 			} else {
-				console.log('token valid', status);
 				setIsAuth(true);
 			}
 		}
@@ -46,8 +42,6 @@ export const AuthContextProvider: React.FC = ({ children }) => {
 	useEffect(() => {
 		checkAuth();
 	}, [isAuth]);
-
-	console.log(isAuth);
 
 	return (
 		<AuthContext.Provider value={{ isAuth, setIsAuth }}>

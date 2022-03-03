@@ -1,13 +1,31 @@
-import { useContext, useState } from 'react';
+import { useContext, useState, useEffect } from 'react';
 import { CategoryContext } from '../context/category-context';
 
 import { CategoryList } from '../components/Category/CategoryList';
 import { AddCategoryForm } from '../components/Category/AddCategoryForm';
+import { getToken } from '../utils/getToken';
+import { useHistory } from 'react-router-dom';
+import { GET_CATEGORIES } from '../api/category/get-categories';
 
 export const CategoryPage = () => {
-	const { categories } = useContext(CategoryContext);
-
+	const history = useHistory();
+	const { categories, setCategories } = useContext(CategoryContext);
 	const [isAddCategoryFormOpen, setIsAddCategoryFormOpen] = useState(false);
+
+	const { id } = getToken();
+	if (!id) {
+		history.push('/auth');
+	}
+
+	const fetchCategories = async (userId: number) => {
+		const result = await GET_CATEGORIES(userId);
+		console.log(result);
+		setCategories?.(result);
+	};
+
+	useEffect(() => {
+		fetchCategories(id);
+	}, []);
 
 	return (
 		<main className='container'>

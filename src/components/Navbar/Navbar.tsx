@@ -2,15 +2,18 @@ import React, { useContext } from 'react';
 import './Navbar.css';
 import { NavLink } from 'react-router-dom';
 import { AuthContext } from '../../context/auth-context';
+import { CategoryContext } from '../../context/category-context';
 import { getToken } from '../../utils/getToken';
 
 export const Navbar = () => {
 	const { isAuth, setIsAuth } = useContext(AuthContext);
 	const { id } = getToken();
+	const { setCategories } = useContext(CategoryContext);
 
 	const handleLogout = () => {
 		localStorage.clear();
 		setIsAuth?.(false);
+		setCategories?.([]);
 	};
 
 	return (
