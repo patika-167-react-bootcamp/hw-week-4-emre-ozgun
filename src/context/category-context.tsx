@@ -11,9 +11,12 @@ export type Todo = {
 	id: number;
 	title: string;
 	statusId: Status['id'];
+	categoryId?: number;
+	userId?: number;
 };
 
 export type Category = {
+	userId?: number;
 	id: number;
 	title: string;
 	status: Status[];
@@ -56,6 +59,7 @@ const initialCategories: Category[] = [
 
 type CategoryContextType = {
 	categories: Category[];
+	setCategories?: React.Dispatch<React.SetStateAction<Category[]>>;
 	addCategory?: (newCategory: Category) => void;
 	removeCategory?: (id: number) => void;
 };
@@ -79,7 +83,7 @@ export const CategoryProvider: React.FC = ({ children }) => {
 
 	return (
 		<CategoryContext.Provider
-			value={{ categories, addCategory, removeCategory }}
+			value={{ categories, addCategory, removeCategory, setCategories }}
 		>
 			{children}
 		</CategoryContext.Provider>

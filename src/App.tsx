@@ -33,7 +33,7 @@ function App() {
 					{!isAuth ? <Redirect to='/auth' /> : <CategoryPage />}
 				</Route>
 				<Route path={'*'} exact>
-					<PageNotFound />
+					{!isAuth ? <Redirect to='/auth' /> : <PageNotFound />}
 				</Route>
 			</Switch>
 		</>
