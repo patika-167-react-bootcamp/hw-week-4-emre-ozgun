@@ -5,8 +5,8 @@ import { CategoryList } from '../components/Category/CategoryList';
 import { AddCategoryForm } from '../components/Category/AddCategoryForm';
 import { getToken } from '../utils/getToken';
 import { useHistory } from 'react-router-dom';
-import { GET_CATEGORIES } from '../api/category/get-categories';
 import { Loader } from '../components/Loader/Loader';
+import { GET_CATEGORIES } from '../api/category/get-categories';
 
 export const CategoryPage = () => {
 	const history = useHistory();

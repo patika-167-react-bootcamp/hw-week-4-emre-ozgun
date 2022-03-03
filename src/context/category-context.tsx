@@ -5,6 +5,7 @@ export type Status = {
 	id: number;
 	title: string;
 	color: string;
+	flag?: number;
 };
 
 export type Todo = {
