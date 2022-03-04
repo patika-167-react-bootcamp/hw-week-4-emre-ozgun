@@ -5,12 +5,17 @@ import { CategoryContext } from '../../context/category-context';
 import { TodoList } from '../Todo/TodoList';
 import { Loader } from '../Loader/Loader';
 import { DELETE_CATEGORY } from '../../api/category/delete-category';
+import { FaRegEdit } from 'react-icons/fa';
 
 type SingleCategoryProps = {
 	category: Category;
+	handleEditCategory: (id: number) => void;
 };
 
-export const SingleCategory = ({ category }: SingleCategoryProps) => {
+export const SingleCategory = ({
+	category,
+	handleEditCategory,
+}: SingleCategoryProps) => {
 	// need to setup a link -> singlecategory page -> /category/:categoryId
 
 	const { removeCategory } = useContext(CategoryContext);
@@ -53,12 +58,22 @@ export const SingleCategory = ({ category }: SingleCategoryProps) => {
 					</span>
 				)}
 
-				<button
-					className='btn single-category__btn-delete'
-					onClick={() => handleRemoveCategory(category.id)}
-				>
-					X
-				</button>
+				<div className='single-category__cta'>
+					<button
+						type='button'
+						className='btn single-category__btn-delete'
+						onClick={() => handleEditCategory(category.id)}
+					>
+						<FaRegEdit />
+					</button>
+					<button
+						type='button'
+						className='btn single-category__btn-delete'
+						onClick={() => handleRemoveCategory(category.id)}
+					>
+						x
+					</button>
+				</div>
 			</div>
 			<TodoList category={category} />
 		</>

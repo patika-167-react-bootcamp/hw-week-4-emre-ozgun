@@ -5,7 +5,7 @@
 }
 
 .todo-list-item {
-	padding: 1rem 0.5rem;
+	padding: 0.9rem 0.75rem;
 	display: flex;
 	justify-content: flex-start;
 	align-items: center;
@@ -23,8 +23,8 @@
 
 .todo-list-status {
 	flex-shrink: 0;
-	height: 1rem;
-	width: 1rem;
+	height: 0.9rem;
+	width: 0.9rem;
 	border-radius: 50%;
 	-webkit-border-radius: 50%;
 	-moz-border-radius: 50%;
