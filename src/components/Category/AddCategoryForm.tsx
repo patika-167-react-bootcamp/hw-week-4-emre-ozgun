@@ -65,7 +65,7 @@ export const AddCategoryForm = ({
 	}, [singleCategory.title, singleCategory.status, singleCategory.todo]);
 
 	const handlePostCategory = async (category: Category, userId: number) => {
-		console.log('in handlepost');
+		console.log('in post');
 		setLoading(true);
 
 		try {
@@ -96,8 +96,8 @@ export const AddCategoryForm = ({
 
 		handlePostCategory(finalState, id);
 
-		setIsAddCategoryFormOpen(false);
 		setSingleCategory(reset);
+		setIsAddCategoryFormOpen(false);
 	};
 
 	// DYNAMIC FORM HANDLERS
