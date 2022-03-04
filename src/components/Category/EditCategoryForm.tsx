@@ -36,7 +36,7 @@ export const EditCategoryForm = ({
 
 	const [singleCategory, setSingleCategory] = useState<Category>({
 		id: 1,
-		title: 'Frontend uygulamalari',
+		title: 'Frontend',
 		status: [
 			{ id: idGenerator(), title: 'In Progress', color: '#ecb341' },
 			{ id: idGenerator(), title: 'Urgent', color: '#ed562c' },
@@ -232,7 +232,7 @@ export const EditCategoryForm = ({
 			onSubmit={(e) => handleCategorySubmit(e)}
 			className={`form form-add ${isEditCategoryFormOpen && 'active'}`}
 		>
-			<h1 className='form__title'>Add Category</h1>
+			<h1 className='form__title'>Edit Category</h1>
 
 			<button
 				className='form-add__btn-delete'

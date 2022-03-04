@@ -1,5 +1,6 @@
-import React, { createContext, useState } from 'react';
+import React, { createContext, useEffect, useState } from 'react';
 import { idGenerator } from '../utils/idGenerator';
+import { FilterType } from '../components/Filter/Filter';
 
 export type Status = {
 	id: number;
@@ -25,40 +26,6 @@ export type Category = {
 	todo: Todo[];
 };
 
-const initialCategories: Category[] = [
-	{
-		id: 1,
-		title: 'Frontend uygulamalari',
-		status: [
-			{ id: idGenerator(), title: 'In Progress', color: '#ecb341' },
-			{ id: idGenerator(), title: 'Urgent', color: '#ed562c' },
-		],
-		todo: [
-			{ id: idGenerator(), title: 'Academic Vocabulary', statusId: 25257 },
-			{ id: idGenerator(), title: 'Read Articles', statusId: 29582058 },
-		],
-	},
-	{
-		id: 2,
-		title: 'Keep up with development trends, Keep up with development trends',
-		status: [{ id: idGenerator(), title: 'Urgent', color: '#ed562c' }],
-		todo: [
-			{ id: idGenerator(), title: 'Practice CSS-In-JS', statusId: 250982508 },
-			{
-				id: idGenerator(),
-				title: 'Docker and Containerization',
-				statusId: 3390383,
-			},
-		],
-	},
-	{
-		id: 3,
-		title: 'React JS',
-		status: [{ id: idGenerator(), title: 'Idle', color: '#2DCCEE' }],
-		todo: [{ id: idGenerator(), title: 'Redux Toolkit', statusId: 25952858 }],
-	},
-];
-
 type CategoryContextType = {
 	categories: Category[];
 	setCategories?: React.Dispatch<React.SetStateAction<Category[]>>;
@@ -66,15 +33,22 @@ type CategoryContextType = {
 	removeCategory?: (id: number) => void;
 	categoryToBeEdited?: Category;
 	setCategoryToBeEdited?: React.Dispatch<React.SetStateAction<Category>>;
+	setFilters?: React.Dispatch<React.SetStateAction<FilterType>>;
+	filters?: FilterType;
 };
 
+//filter, set filter -> manipulate with useEffect
+
 export const CategoryContext = createContext<CategoryContextType>({
-	categories: initialCategories,
+	categories: [],
 });
 
 export const CategoryProvider: React.FC = ({ children }) => {
 	const [categories, setCategories] = useState<Category[]>([] as Category[]);
+
 	const [categoryToBeEdited, setCategoryToBeEdited] = useState({} as Category);
+
+	const [filters, setFilters] = useState({} as FilterType);
 
 	const addCategory = (newCategory: Category) => {
 		setCategories((prev) => [newCategory, ...prev]);
@@ -93,6 +67,8 @@ export const CategoryProvider: React.FC = ({ children }) => {
 				setCategories,
 				categoryToBeEdited,
 				setCategoryToBeEdited,
+				setFilters,
+				filters,
 			}}
 		>
 			{children}
