@@ -16,6 +16,7 @@ export const GET_CATEGORIES = async (userId: number) => {
 	// for each category, insert stasuses
 	for (let category of categories) {
 		const stateInstance: Category = {
+			updatedAt: category.updatedAt,
 			id: category.id,
 			title: category.title,
 			status: [],

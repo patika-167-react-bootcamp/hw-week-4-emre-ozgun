@@ -1,4 +1,4 @@
-import { Status, Todo, Category } from '../../context/category-context';
+import { Category } from '../../context/category-context';
 import axios from 'axios';
 
 // LOGIC : visit necessary endpoints, post necessary data, construct UI state

@@ -1,33 +1,26 @@
-import React, { useState, useContext, useEffect } from 'react';
-
-import { idGenerator } from '../../utils/idGenerator';
-import { colorGenerator } from '../../utils/colorGenerator';
-import { Category, CategoryContext } from '../../context/category-context';
-import './AddCategoryForm.css';
-import { Loader } from '../Loader/Loader';
+import React, { useState, useEffect, useContext } from 'react';
+import { Category } from '../../context/category-context';
 import { getToken } from '../../utils/getToken';
 import { useHistory } from 'react-router-dom';
+import { Loader } from '../Loader/Loader';
+import { idGenerator } from '../../utils/idGenerator';
+import { colorGenerator } from '../../utils/colorGenerator';
 import { POST_CATEGORY } from '../../api/category/post-category';
+import { DELETE_CATEGORY } from '../../api/category/delete-category';
+import { CategoryContext } from '../../context/category-context';
+import './AddCategoryForm.css';
 
-const reset = {
-	id: Math.random() * 1000,
-	title: '',
-	status: [{ id: idGenerator(), title: '', color: '#ff9500' }],
-	todo: [{ id: idGenerator(), title: '', statusId: 0 }],
+type EditCategoryFormProps = {
+	isEditCategoryFormOpen: boolean;
+	setIsEditCategoryFormOpen: React.Dispatch<React.SetStateAction<boolean>>;
+	categoryId: null | number;
 };
 
-type AddCategoryFormProps = {
-	isAddCategoryFormOpen: boolean;
-	setIsAddCategoryFormOpen: React.Dispatch<React.SetStateAction<boolean>>;
-	categoryToBeEdited?: Category;
-	identifier?: string;
-	setIdentifier?: React.Dispatch<React.SetStateAction<string>>;
-};
-
-export const AddCategoryForm = ({
-	isAddCategoryFormOpen,
-	setIsAddCategoryFormOpen,
-}: AddCategoryFormProps) => {
+export const EditCategoryForm = ({
+	isEditCategoryFormOpen,
+	setIsEditCategoryFormOpen,
+	categoryId,
+}: EditCategoryFormProps) => {
 	const history = useHistory();
 
 	const { id } = getToken();
@@ -35,22 +28,32 @@ export const AddCategoryForm = ({
 		history.push('/auth');
 	}
 
-	// import addCategory from global context to add  new category
-	const { addCategory } = useContext(CategoryContext);
-
-	let initialAddFormState: Category = {
-		id: Math.random() * 1000,
-		title: '',
-		status: [{ id: idGenerator(), title: '', color: '#ff9500' }],
-		todo: [{ id: idGenerator(), title: '', statusId: 0 }],
-	};
+	const { addCategory, removeCategory, categories } =
+		useContext(CategoryContext);
 
 	const [disable, setDisable] = useState(true);
-
-	const [singleCategory, setSingleCategory] =
-		useState<Category>(initialAddFormState);
-
 	const [loading, setLoading] = useState(false);
+
+	const [singleCategory, setSingleCategory] = useState<Category>({
+		id: 1,
+		title: 'Frontend uygulamalari',
+		status: [
+			{ id: idGenerator(), title: 'In Progress', color: '#ecb341' },
+			{ id: idGenerator(), title: 'Urgent', color: '#ed562c' },
+		],
+		todo: [
+			{ id: idGenerator(), title: 'Academic Vocabulary', statusId: 25257 },
+			{ id: idGenerator(), title: 'Read Articles', statusId: 29582058 },
+		],
+	});
+
+	useEffect(() => {
+		const categoryToBeEdited = categories.find((c) => c.id === categoryId);
+
+		if (categoryToBeEdited) {
+			setSingleCategory(categoryToBeEdited);
+		}
+	}, [categoryId]);
 
 	// Form validation
 	useEffect(() => {
@@ -73,6 +76,9 @@ export const AddCategoryForm = ({
 
 		try {
 			// extract and post category to DB -- SERVER STATE
+			await DELETE_CATEGORY(category.id);
+			removeCategory?.(category.id);
+
 			const newCategories = await POST_CATEGORY(category, userId);
 
 			//append to state -- UI STATE
@@ -99,15 +105,11 @@ export const AddCategoryForm = ({
 
 		handlePostCategory(finalState, id);
 
-		setSingleCategory(reset);
-		setIsAddCategoryFormOpen(false);
+		// setSingleCategory(reset);
+		setIsEditCategoryFormOpen(false);
 	};
 
 	// DYNAMIC FORM HANDLERS
-
-	const handleFormReset = () => {
-		setSingleCategory(reset);
-	};
 
 	const handleTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 		setSingleCategory({
@@ -228,7 +230,7 @@ export const AddCategoryForm = ({
 	return (
 		<form
 			onSubmit={(e) => handleCategorySubmit(e)}
-			className={`form form-add ${isAddCategoryFormOpen && 'active'}`}
+			className={`form form-add ${isEditCategoryFormOpen && 'active'}`}
 		>
 			<h1 className='form__title'>Add Category</h1>
 
@@ -236,7 +238,7 @@ export const AddCategoryForm = ({
 				className='form-add__btn-delete'
 				type='button'
 				onClick={() => {
-					setIsAddCategoryFormOpen(false);
+					setIsEditCategoryFormOpen(false);
 				}}
 			>
 				x
@@ -268,7 +270,7 @@ export const AddCategoryForm = ({
 				</label>
 				<div className='form-separator'></div>
 
-				{singleCategory.status.map((status, i) => (
+				{singleCategory.status?.map((status, i) => (
 					<div className='form__block-inline' key={status.id}>
 						<input
 							className='form__block-input'
@@ -361,20 +363,7 @@ export const AddCategoryForm = ({
 				className='btn form__btn form__btn-submit'
 				disabled={disable}
 			>
-				ADD CATEGORY
-			</button>
-
-			<button
-				onClick={() => handleFormReset()}
-				style={{
-					backgroundColor: '#333',
-					color: '#eee',
-					marginTop: '-0.5rem',
-				}}
-				type='button'
-				className='btn form__btn form__btn-submit'
-			>
-				RESET
+				SAVE
 			</button>
 		</form>
 	);

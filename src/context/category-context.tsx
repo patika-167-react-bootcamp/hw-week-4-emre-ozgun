@@ -17,6 +17,7 @@ export type Todo = {
 };
 
 export type Category = {
+	updatedAt?: string;
 	userId?: number;
 	id: number;
 	title: string;
@@ -63,6 +64,8 @@ type CategoryContextType = {
 	setCategories?: React.Dispatch<React.SetStateAction<Category[]>>;
 	addCategory?: (newCategory: Category) => void;
 	removeCategory?: (id: number) => void;
+	categoryToBeEdited?: Category;
+	setCategoryToBeEdited?: React.Dispatch<React.SetStateAction<Category>>;
 };
 
 export const CategoryContext = createContext<CategoryContextType>({
@@ -71,6 +74,7 @@ export const CategoryContext = createContext<CategoryContextType>({
 
 export const CategoryProvider: React.FC = ({ children }) => {
 	const [categories, setCategories] = useState<Category[]>([] as Category[]);
+	const [categoryToBeEdited, setCategoryToBeEdited] = useState({} as Category);
 
 	const addCategory = (newCategory: Category) => {
 		setCategories((prev) => [newCategory, ...prev]);
@@ -80,11 +84,16 @@ export const CategoryProvider: React.FC = ({ children }) => {
 		setCategories(categories.filter((c) => c.id !== categoryId));
 	};
 
-	// console.log(categories);
-
 	return (
 		<CategoryContext.Provider
-			value={{ categories, addCategory, removeCategory, setCategories }}
+			value={{
+				categories,
+				addCategory,
+				removeCategory,
+				setCategories,
+				categoryToBeEdited,
+				setCategoryToBeEdited,
+			}}
 		>
 			{children}
 		</CategoryContext.Provider>
